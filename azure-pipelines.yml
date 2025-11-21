@@ -15,8 +15,15 @@ variables:
 steps:
 - script: dotnet publish --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)
   displayName: 'dotnet publish $(buildConfiguration) to Staging Directory'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.artifactstagingdirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/hansmond-da.zip'
+    replaceExistingArchive: true
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/hansmond-da.zip'
     ArtifactName: 'hansmond-da'
     publishLocation: 'Container'
