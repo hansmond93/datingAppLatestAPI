@@ -13,5 +13,10 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet publish --configuration $(buildConfiguration)
-  displayName: 'dotnet publish $(buildConfiguration)'
+- script: dotnet publish --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)
+  displayName: 'dotnet publish $(buildConfiguration) to Staging Directory'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'hansmond-da'
+    publishLocation: 'Container'
