@@ -12,10 +12,27 @@ namespace API.Data
 
         public DbSet<Photo> Photos { get; set; }
 
+        public DbSet<MemberLike> Likes { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<MemberLike>()
+                .HasKey(x => new {x.SourceMemberId, x.TargetMemberId}); //set the Primary key to this values
+
+            modelBuilder.Entity<MemberLike>()
+                .HasOne(x => x.SourceMember)
+                .WithMany(t => t.LikedMembers)
+                .HasForeignKey(x => x.SourceMemberId)
+                .OnDelete(DeleteBehavior.Cascade);  //Delete the foreign key means deleting the SourceMember
+
+            modelBuilder.Entity<MemberLike>()
+                .HasOne(x => x.TargetMember)
+                .WithMany(t => t.LikedByMembers)
+                .HasForeignKey(x => x.TargetMemberId)
+                .OnDelete(DeleteBehavior.NoAction);  
 
             var dateTomeConverter = new ValueConverter<DateTime, DateTime>(
                 v => v.ToUniversalTime(),
