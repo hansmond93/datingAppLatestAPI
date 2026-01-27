@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -27,6 +28,13 @@ namespace API.Controllers
         public IActionResult GetBadRequest()
         {
             return BadRequest("There is a bad request");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-secret")]
+        public ActionResult<string> GetSecretAdmin()
+        {
+            return Ok("Only for ADMINS");
         }
     }
 }
